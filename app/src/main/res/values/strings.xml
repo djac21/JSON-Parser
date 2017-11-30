@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JSONParser</string>
+    <string name="about">About</string>
+    <string name="refresh">Refresh</string>
 </resources>

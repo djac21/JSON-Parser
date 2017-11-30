@@ -1,11 +1,14 @@
 package com.djac21.jsonparser;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -20,12 +23,12 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
     private ListView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    //    Just for testing old json file
+    //    Just for testing (old JSON file)
     private static String url = "https://dl.dropboxusercontent.com/s/tfd1d9ff3lsli6m/App.json?dl=0";
 
     ArrayList<HashMap<String, String>> versionList;
@@ -37,17 +40,17 @@ public class MainActivity extends AppCompatActivity {
         versionList = new ArrayList<>();
         listView = findViewById(R.id.listView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        new GetContacts().execute();
+        new GetData().execute();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new GetContacts().execute();
+                new GetData().execute();
             }
         });
     }
 
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
+    private class GetData extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -122,5 +125,27 @@ public class MainActivity extends AppCompatActivity {
 
             listView.setAdapter(adapter);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_about) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("About")
+                    .setMessage("Simple app to parse JSON data")
+                    .setPositiveButton("OK", null);
+            builder.create().show();
+        } else if (id == R.id.action_refresh) {
+            new GetData().execute();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
