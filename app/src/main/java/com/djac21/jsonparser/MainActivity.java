@@ -31,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     //    Just for testing (old JSON file)
-//    private static String url = "https://dl.dropboxusercontent.com/s/tfd1d9ff3lsli6m/App.json?dl=0";
-    private static String url = "https://api.coinmarketcap.com/v1/ticker/";
+    private static String url = "https://dl.dropboxusercontent.com/s/tfd1d9ff3lsli6m/App.json?dl=0";
 
     ArrayList<HashMap<String, String>> versionList;
 
@@ -71,22 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
             if (jsonStr != null) {
                 try {
-//                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray jsonArray = jsonObj.getJSONArray("android");
 
-//                    JSONArray jsonArray = jsonObj.getJSONArray("Value");
-                    JSONArray jsonArray2 = new JSONArray(jsonStr);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
 
-                    for (int i = 0; i < jsonArray2.length(); i++) {
-                        JSONObject c = jsonArray2.getJSONObject(i);
-
-                        String id = c.getString("id");
+                        String id = c.getString("ver");
                         String name = c.getString("name");
-                        String email = c.getString("max_supply");
+                        String email = c.getString("api");
 
                         HashMap<String, String> version = new HashMap<>();
-                        version.put("id", id);
+                        version.put("ver", id);
                         version.put("name", name);
-                        version.put("max_supply", email);
+                        version.put("api", email);
 
                         versionList.add(version);
                     }
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
 
             ListAdapter adapter = new SimpleAdapter(MainActivity.this, versionList,
-                    R.layout.list_item, new String[]{"id", "name", "max_supply"},
+                    R.layout.list_item, new String[]{"ver", "name", "api"},
                     new int[]{R.id.ver, R.id.name, R.id.api});
 
             listView.setAdapter(adapter);
